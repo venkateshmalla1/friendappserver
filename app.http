@@ -19,3 +19,6 @@ Content-Type: application/json
 
 ### Status
 GET http://localhost:5000/api/status
+### people
+
+GET http://localhost:5000/api/people
