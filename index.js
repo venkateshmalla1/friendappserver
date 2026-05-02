@@ -102,6 +102,20 @@ app.put('/api/people/:id', async (req, res) => {
   }
 });
 
+// GET person by name (case-insensitive)
+app.get('/api/people/name/:name', async (req, res) => {
+  try {
+    const person = await Person.findOne({
+      names: { $regex: new RegExp(`^${req.params.name}$`, "i") }
+    });
+    if (!person) return res.status(404).json({ error: "Person not found" });
+    res.json(person);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 app.delete('/api/people/:id', async (req, res) => {
   try {
     const deletedPerson = await Person.findByIdAndDelete(req.params.id);
