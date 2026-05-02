@@ -1,0 +1,21 @@
+### Signup
+POST http://localhost:5000/api/signup
+Content-Type: application/json
+
+{
+  "username": "Divakar",
+  "password": "Lakshmi@143"
+}
+
+
+### Login
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+  "username": "Divakar",
+  "password": "Lakshmi@143"
+}
+
+### Status
+GET http://localhost:5000/api/status

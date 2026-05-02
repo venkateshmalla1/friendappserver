@@ -48,10 +48,9 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 const User = mongoose.model("User", userSchema, "userData");
@@ -100,6 +99,10 @@ app.post("/api/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ error: "JWT_SECRET not configured" });
+    }
+
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -107,7 +110,7 @@ app.post("/api/login", async (req, res) => {
     );
 
     res.cookie("token", token, { httpOnly: true });
-    res.json({ message: "Login successful", role: user.role });
+    res.json({ message: "Login successful", role: user.role, token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
