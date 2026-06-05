@@ -81,8 +81,14 @@ function roleMiddleware(requiredRole) {
 // --- Auth Routes ---
 app.post("/api/signup", async (req, res) => {
   try {
-    const { username, password, role } = req.body;
-    const user = new User({ username, password, role });
+    const { username, password } = req.body;
+
+    const user = new User({ 
+      username, 
+      password, 
+      role: "public" // Force role to "public" for all new signups  
+    });
+
     await user.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
